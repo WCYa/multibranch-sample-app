@@ -21,6 +21,9 @@ spec:
     - sleep
     args:
     - infinity
+    env:
+      - name: "CONTAINER"
+        value: "shell"
     securityContext:
       # ubuntu runs as root by default, it is recommended or even mandatory in some environments (such as pod security admission "restricted") to run as a non-root user.
       runAsUser: 1000
@@ -36,7 +39,12 @@ spec:
     stages {
         stage('Main') {
             steps {
-                sh 'hostname'
+                sh '''
+                    hostname
+                    echo "$CONTAINER"
+                    # try to get JENKINS_SECRET env
+                    echo "$JENKINS_SECRET"
+                '''
             }
         }
         stage('for the fix branch') {
@@ -47,6 +55,14 @@ spec:
                 sh '''
                     cat README.md
                 '''
+            }
+        }
+        stage('for the PR') {
+            when {
+                branch "PR-*"
+            }
+            steps {
+                echo 'this only runs for the PRs'
             }
         }
     }
