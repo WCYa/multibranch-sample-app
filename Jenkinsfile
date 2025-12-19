@@ -39,5 +39,15 @@ spec:
                 sh 'hostname'
             }
         }
+        stage('for the fix branch') {
+            when {
+                branch "fix-*"
+            }
+            steps {
+                sh '''
+                    cat README.md
+                '''
+            }
+        }
     }
 }
