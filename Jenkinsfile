@@ -39,8 +39,12 @@ spec:
     stages {
         stage('Main') {
             steps {
-                sh 'hostname'
-                echo "$CONTAINER"
+                sh '''
+                    hostname
+                    echo "$CONTAINER"
+                    # try to get JENKINS_SECRET env
+                    echo "$JENKINS_SECRET"
+                '''
             }
         }
         stage('for the fix branch') {
